@@ -1,0 +1,41 @@
+通讯录数据格式
+	//共十八
+	public int _id;
+	public String KuaiDiGongSi;//快递公司
+	public String ZhanDianMingCheng;//站点名称
+	public String ZhanDianDaiMa;//站点代码
+	public String ShengFen;//省份
+	public String DiShi;//地市
+	public String XianQu;//县区
+	public String XiangZhen;//乡镇
+	public String JieDao;//街道
+	public String XingMing;//姓名
+	public String ZhiWu;//职务
+	public String DianHua;//电话
+	public String ShouJi;//手机
+	public String QQHaoMa;//qq号码
+	public String JingYingDiZhi;//经营地址
+	public String FuWuFanWei;//服务范围
+	public String ChaoQuFanWei;//超区范围
+	public String BeiZhu;//备注
+
+
+发货表单数据格式
+	//共十四个
+	public int _id;
+	public String YunDanBianHao;//运单编号
+	public String JiJianRiQi;//寄件日期
+	public String JiJianWangDian;//寄件网点
+	public String MuDiDi;//目的地
+	public String JianShu;//件数
+	public String ShiZhong;//实重
+	public String FuKuanFangShi;//付款方式
+	public String YunFei;//运费
+	public String DaiShouHuoKuan;//代收货款
+	public String QuJianYuan;//取件员
+	public String ZiDanHao;//子单号
+	public String JiJianRen;//寄件人
+	public String JiJianGongSi;//寄件公司
+
+签收表单数据格式
+	//无，不需要签收表单
