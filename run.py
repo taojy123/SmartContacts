@@ -98,9 +98,9 @@ import django.contrib.staticfiles.urls
 if __name__ == "__main__":
     if len(sys.argv)==1:
         sys.argv.append("runserver")
-        sys.argv.append("0.0.0.0:8000")
+        sys.argv.append("0.0.0.0:80")
     else:
-        webbrowser.open_new_tab('http://127.0.0.1:8000')
+        webbrowser.open_new_tab('http://127.0.0.1:80')
     print sys.argv
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)

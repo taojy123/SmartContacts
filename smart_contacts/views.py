@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
+from django.contrib.auth.models import User
 from models import *
 import os
 import uuid
@@ -57,7 +57,6 @@ def add_contacts(request):
     if id:
         ob.id = id
     ob.save()
-
     return HttpResponse("ok")
 
 
@@ -85,7 +84,7 @@ def get_contacts(request, id):
         d["FuWuFanWei"] = c.FuWuFanWei
         d["ChaoQuFanWei"] = c.ChaoQuFanWei
         d["BeiZhu"] = c.BeiZhu
-        output = json.dumps(d)
+        output = json.dumps(d, ensure_ascii=False)
     else:
         output = "Have No Record"
 
@@ -108,7 +107,14 @@ def add_send(request):
     ZiDanHao = request.REQUEST.get('ZiDanHao', '')
     JiJianRen = request.REQUEST.get('JiJianRen', '')
     JiJianGongSi = request.REQUEST.get('JiJianGongSi', '')
+    ShouJianDianHua = request.REQUEST.get('ShouJianDianHua', '')
+    ShouJianRen = request.REQUEST.get('ShouJianRen', '')
+    ShouJianGongsi = request.REQUEST.get('ShouJianGongsi', '')
+    ShouJianDiZhi = request.REQUEST.get('ShouJianDiZhi', '')
 
+    if not YunDanBianHao:
+        return HttpResponse("no YunDanBianHao")
+        
     ob = Send()
     ob.user_id = user_id
     ob.YunDanBianHao = YunDanBianHao
@@ -124,6 +130,10 @@ def add_send(request):
     ob.ZiDanHao = ZiDanHao
     ob.JiJianRen = JiJianRen
     ob.JiJianGongSi = JiJianGongSi
+    ob.ShouJianDianHua = ShouJianDianHua
+    ob.ShouJianRen = ShouJianRen
+    ob.ShouJianGongsi = ShouJianGongsi
+    ob.ShouJianDiZhi = ShouJianDiZhi
     if id:
         ob.id = id
     ob.save()
@@ -151,7 +161,11 @@ def get_send(request, id):
         d["ZiDanHao"] = c.ZiDanHao
         d["JiJianRen"] = c.JiJianRen
         d["JiJianGongSi"] = c.JiJianGongSi
-        output = json.dumps(d)
+        d["ShouJianDianHua"] = c.ShouJianDianHua
+        d["ShouJianRen"] = c.ShouJianRen
+        d["ShouJianGongsi"] = c.ShouJianGongsi
+        d["ShouJianDiZhi"] = c.ShouJianDiZhi
+        output = json.dumps(d, ensure_ascii=False)
     else:
         output = "Have No Record"
 
@@ -166,22 +180,137 @@ def get_user_info(request, user_id):
     cids = ",".join(cids)
     sids = ",".join(sids)
     d = dict(cids=cids, sids=sids)
-    output = json.dumps(d)
+    output = json.dumps(d, ensure_ascii=False)
     return HttpResponse(output)
 
 
 
+def upload_img(request, user_id):
+    type = request.REQUEST.get("type")
+    send_id = request.REQUEST.get("send_id")
+    file = request.FILES.get('u_file')
+    if not file:
+        return HttpResponse("no pic")
+    filename, ext = os.path.splitext(file.name)
+    if not ext.lower() in ['.jpg','.gif','.png','.bmp']:
+        HttpResponse("type error")
+    permanent_file_name =  file.name
+    if 'SERVER_SOFTWARE' in os.environ:
+        import sae.storage
+        s = sae.storage.Client()
+        ob = sae.storage.Object(file.read())
+        url = s.put('images', permanent_file_name, ob)
+    else:
+        raw_file = os.path.join(os.getcwd(), 'static', 'images', permanent_file_name)
+        destination = open(raw_file, 'wb+')
+        for chunk in file.chunks():
+            destination.write(chunk)
+        destination.close()
+        url = "http://" + request.get_host() + "/static/images/" + permanent_file_name
+    im_exist = Img.objects.filter(name=filename)
+    if im_exist:
+        im = im_exist[0]
+    else:
+        im = Img()
+    im.user_id = user_id
+    im.name = filename
+    im.url = url
+    im.type = type
+    im.send_id = send_id
+    im.save()
+    return HttpResponse(url)
+
+
+def show_img(request, user_id):
+    ims = Img.objects.filter(user_id=user_id)
+    return render_to_response('show_img.html', locals())
+
+
+def list_img(request, user_id):
+    ims = Img.objects.filter(user_id=user_id)
+    ls = [im.url for im in ims]
+    return HttpResponse(str(ls))
+
+
+def del_img(request, id):
+    im = Img.objects.get(id=id)
+    user_id = im.user_id
+    im.delete()
+    return HttpResponseRedirect("/show_img/" + user_id + "/")
+
+
+def find_img(request):
+    url = ""
+    YunDanBianHao = request.REQUEST.get("YunDanBianHao")
+    im = Img.objects.filter(send_id=YunDanBianHao)
+    if im:
+        im = im[0]
+        url = im.url
+    return HttpResponse(url)
+
+
+def search_send(request):
+    YunDanBianHao = request.REQUEST.get("YunDanBianHao")
+    c = Send.objects.filter(YunDanBianHao=YunDanBianHao)
+    d = {}
+    if c:
+        c = c[0]
+        d["_id"] = c.id
+        d["user_id"] = c.user_id
+        d["YunDanBianHao"] = c.YunDanBianHao
+        d["JiJianRiQi"] = c.JiJianRiQi
+        d["JiJianWangDian"] = c.JiJianWangDian
+        d["MuDiDi"] = c.MuDiDi
+        d["JianShu"] = c.JianShu
+        d["ShiZhong"] = c.ShiZhong
+        d["FuKuanFangShi"] = c.FuKuanFangShi
+        d["YunFei"] = c.YunFei
+        d["DaiShouHuoKuan"] = c.DaiShouHuoKuan
+        d["QuJianYuan"] = c.QuJianYuan
+        d["ZiDanHao"] = c.ZiDanHao
+        d["JiJianRen"] = c.JiJianRen
+        d["JiJianGongSi"] = c.JiJianGongSi
+        d["ShouJianDianHua"] = c.ShouJianDianHua
+        d["ShouJianRen"] = c.ShouJianRen
+        d["ShouJianGongsi"] = c.ShouJianGongsi
+        d["ShouJianDiZhi"] = c.ShouJianDiZhi
+        output = json.dumps(d, ensure_ascii=False)
+    else:
+        output = "Have No Record"
+
+    return HttpResponse(output)
+
+
+
+
 #====================login=============================================
+def reg(request):
+    username = request.REQUEST.get('username', '')
+    password = request.REQUEST.get('password', '')
+    print "====reg===="
+    print username
+    print password
+    if User.objects.filter(username = username):
+        return HttpResponse("Exist")
+    u = User()
+    u.username = username
+    u.set_password(password)
+    u.save()
+    return HttpResponse(u.id)
+
 def login(request):
     username = request.REQUEST.get('username', '')
     password = request.REQUEST.get('password', '')
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-    return HttpResponseRedirect("/admin/")
+        return HttpResponse(user.id)
+    else:
+        return HttpResponse("Failure")
+
 
 def logout(request):
     if request.user.is_authenticated():
         auth.logout(request)
-    return HttpResponseRedirect("/admin/")
+    return HttpResponse("ok")
 #======================================================================

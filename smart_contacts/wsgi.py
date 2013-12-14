@@ -15,6 +15,15 @@ framework.
 
 """
 import os
+import sys
+
+path = os.path.dirname(__file__)
+path = path.replace(r"\smart_contacts","").replace(r"/smart_contacts","")
+os.chdir(path)
+sys.path.append(path)
+
+print os.getcwd()
+print "......"
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "smart_contacts.settings")
 

@@ -13,12 +13,23 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
     ('^$', index),
+    ('^/$', index),
     ('^index/$', index),
     ('^add_contacts/$', add_contacts),
     ('^get_contacts/(.*)/$', get_contacts),
     ('^add_send/$', add_send),
     ('^get_send/(.*)/$', get_send),
     ('^get_user_info/(.*)/$', get_user_info),
+    ('^upload_img/(.*)/$', upload_img),
+    ('^show_img/(.*)/$', show_img),
+    ('^list_img/(.*)/$', list_img),
+    ('^del_img/(.*)/$', del_img),
+    ('^find_img/$', find_img),
+    ('^search_send/$', search_send),
+                       
+    ('^reg/$', reg),
+    ('^login/$', login),
+    ('^logout/$', logout),
 )
 # This will work if DEBUG is True
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

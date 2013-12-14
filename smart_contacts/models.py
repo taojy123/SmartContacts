@@ -38,7 +38,17 @@ class Send(models.Model):
     ZiDanHao = models.CharField(max_length=255, blank=True , null=True)
     JiJianRen = models.CharField(max_length=255, blank=True , null=True)
     JiJianGongSi = models.CharField(max_length=255, blank=True , null=True)
+    ShouJianDianHua = models.CharField(max_length=255, blank=True , null=True)
+    ShouJianRen = models.CharField(max_length=255, blank=True , null=True)
+    ShouJianGongsi = models.CharField(max_length=255, blank=True , null=True)
+    ShouJianDiZhi = models.CharField(max_length=255, blank=True , null=True)
 
 
+class Img(models.Model):
+    user_id = models.CharField(max_length=255, blank=True , null=True)
+    name = models.CharField(max_length=255, blank=True , null=True)
+    url = models.CharField(max_length=255, blank=True , null=True)
+    type = models.CharField(max_length=255, blank=True , null=True)
+    send_id = models.CharField(max_length=255, blank=True , null=True)
 
 

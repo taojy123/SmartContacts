@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>用户图片库</title>
+</head>
+<body>
+<h1>用户图片库</h1>
+    {% for im in ims %}
+        <p>
+            <a href="{{ im.url }}">
+                <img src="{{ im.url }}" height="200" />
+            </a>
+            <span>{{ im.name }}</span>
+            <button onclick="window.open('{{ im.url }}')">下载</button>
+            <button onclick="if(confirm('确定要删除该图?')){top.location='/del_img/{{ im.id }}'}">删除</button>
+        </p>
+    {% endfor %}
+</body>
+
+</html>
