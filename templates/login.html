@@ -1,0 +1,66 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>阿里快递单 信息查询系统</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#login").addClass("pure-menu-selected")
+
+        })
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+
+    {% include "menu.html" %}
+
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>登录用户</h1>
+        </div>
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <form class="pure-form" action="/login_user/">
+                <p>
+                    用户名：
+                    <input type="text" name="username">
+                </p>
+                <p>
+                    登录密码：
+                    <input type="password" name="password">
+                </p>
+                <p>
+                    <input type="submit" class="pure-button pure-button-primary">
+                </p>
+            </form>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>

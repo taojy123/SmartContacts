@@ -1,6 +1,12 @@
-
 # -*- coding: utf-8 -*-
 from django.db import models
+
+key_list =["YunDanBianHao", "JiJianRiQi", "JiJianWangDian", "MuDiDi", "JianShu", "ShiZhong", "FuKuanFangShi",
+           "YunFei", "DaiShouHuoKuan", "QuJianYuan", "ZiDanHao", "JiJianRen", "JiJianGongSi", "ShouJianDianHua",
+           "ShouJianRen", "ShouJianGongsi", "ShouJianDiZhi"]
+show_list = ["运单编号", "寄件日期", "寄件网点", "目的地", "件数", "实重", "付款方式", "运费", "代收货款", "取件员",
+             "子单号", "寄件人", "寄件公司", "收件电话", "收件人", "收件公司", "收件地址"]
+
 
 class Contacts(models.Model):
     user_id = models.CharField(max_length=255, blank=True , null=True)
@@ -42,6 +48,7 @@ class Send(models.Model):
     ShouJianRen = models.CharField(max_length=255, blank=True , null=True)
     ShouJianGongsi = models.CharField(max_length=255, blank=True , null=True)
     ShouJianDiZhi = models.CharField(max_length=255, blank=True , null=True)
+    is_load = models.CharField(max_length=255, blank=True , null=True)
 
 
 class Img(models.Model):
@@ -50,5 +57,24 @@ class Img(models.Model):
     url = models.CharField(max_length=255, blank=True , null=True)
     type = models.CharField(max_length=255, blank=True , null=True)
     send_id = models.CharField(max_length=255, blank=True , null=True)
+    is_load = models.CharField(max_length=255, blank=True , null=True)
+
+
+
+class Config_send(models.Model):
+    user_id = models.CharField(max_length=255, blank=True , null=True)
+    key = models.CharField(max_length=255, blank=True , null=True)
+    name = models.CharField(max_length=255, blank=True , null=True)
+    default = models.CharField(max_length=255, blank=True , null=True, default="")
+
+    def show_key(self):
+        if self.key in key_list:
+            i = key_list.index(self.key)
+            return show_list[i]
+
+class User_info(models.Model):
+    user_id = models.CharField(max_length=255, blank=True , null=True)
+    city = models.CharField(max_length=255, blank=True , null=True)
+    company = models.CharField(max_length=255, blank=True , null=True)
 
 

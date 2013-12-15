@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -8,10 +7,14 @@ from models import *
 import os
 import uuid
 import json
+import xlwt
+import time
+import zipfile
 
 
-def index(request):
-    return render_to_response('index.html', locals())
+
+def readme(request):
+    return render_to_response('readme.html', locals())
 
 
 def add_contacts(request):
@@ -186,7 +189,7 @@ def get_user_info(request, user_id):
 
 
 def upload_img(request, user_id):
-    type = request.REQUEST.get("type")
+    type = request.REQUEST.get("type", "send")
     send_id = request.REQUEST.get("send_id")
     file = request.FILES.get('u_file')
     if not file:
@@ -194,19 +197,17 @@ def upload_img(request, user_id):
     filename, ext = os.path.splitext(file.name)
     if not ext.lower() in ['.jpg','.gif','.png','.bmp']:
         HttpResponse("type error")
+
     permanent_file_name =  file.name
-    if 'SERVER_SOFTWARE' in os.environ:
-        import sae.storage
-        s = sae.storage.Client()
-        ob = sae.storage.Object(file.read())
-        url = s.put('images', permanent_file_name, ob)
-    else:
-        raw_file = os.path.join(os.getcwd(), 'static', 'images', permanent_file_name)
-        destination = open(raw_file, 'wb+')
-        for chunk in file.chunks():
-            destination.write(chunk)
-        destination.close()
-        url = "http://" + request.get_host() + "/static/images/" + permanent_file_name
+    if send_id:
+        permanent_file_name = send_id + ext
+    raw_file = os.path.join(os.getcwd(), 'static', 'images', permanent_file_name)
+    destination = open(raw_file, 'wb+')
+    for chunk in file.chunks():
+        destination.write(chunk)
+    destination.close()
+    url = "http://" + request.get_host() + "/static/images/" + permanent_file_name
+
     im_exist = Img.objects.filter(name=filename)
     if im_exist:
         im = im_exist[0]
@@ -312,5 +313,254 @@ def login(request):
 def logout(request):
     if request.user.is_authenticated():
         auth.logout(request)
-    return HttpResponse("ok")
+    return HttpResponseRedirect("/")
 #======================================================================
+
+
+
+
+
+key_list =["YunDanBianHao", "JiJianRiQi", "JiJianWangDian", "MuDiDi", "JianShu", "ShiZhong", "FuKuanFangShi",
+           "YunFei", "DaiShouHuoKuan", "QuJianYuan", "ZiDanHao", "JiJianRen", "JiJianGongSi", "ShouJianDianHua",
+           "ShouJianRen", "ShouJianGongsi", "ShouJianDiZhi"]
+show_list = ["运单编号", "寄件日期", "寄件网点", "目的地", "件数", "实重", "付款方式", "运费", "代收货款", "取件员",
+             "子单号", "寄件人", "寄件公司", "收件电话", "收件人", "收件公司", "收件地址"]
+
+
+def index(request):
+    YunDanBianHao = request.REQUEST.get('YunDanBianHao')
+    if YunDanBianHao:
+        rs = Send.objects.filter(YunDanBianHao=YunDanBianHao)
+        if rs:
+            send = rs[0]
+        else:
+            send = None
+
+        rs = Img.objects.filter(send_id=YunDanBianHao)
+        if rs:
+            img_url = rs[0].url
+        else:
+            img_url = None
+
+    if request.user.is_authenticated():
+        user_id = request.user.id
+        if not Config_send.objects.filter(user_id=user_id):
+            for key, show in zip(key_list, show_list):
+                cs = Config_send()
+                cs.user_id = user_id
+                cs.key = key
+                cs.name = show
+                cs.save()
+
+    return render_to_response('index.html', locals())
+
+
+
+
+def output(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("<script>alert('请先登录用户')</script>")
+
+    user_id = request.user.id
+    username = request.user.username
+
+    workBook = xlwt.Workbook()
+    workBook.add_sheet("bill")
+    sheet = workBook.get_sheet(0)
+
+    cs_list = Config_send.objects.filter(user_id=user_id).order_by('id')
+
+    i = 0
+    for cs in cs_list:
+        sheet.write(0, i, cs.name)
+        i += 1
+
+    sends = Send.objects.filter(user_id=user_id)
+
+    n = 1
+    for send in sends:
+        if send.is_load:
+            continue
+        i = 0
+        for cs in cs_list:
+            value = getattr(send, cs.key, "")
+            #value = value.decode("utf8")
+            sheet.write(n, i, value)
+            send.is_load = "1"
+            send.save()
+            i += 1
+        n += 1
+
+    filename = username + "_" + time.strftime('%Y%m%d_%H%M') + ".xls"
+    workBook.save("static/send/" + filename)
+
+    if n == 1:
+        return HttpResponse("<script>alert('暂时没有未导出的记录')</script>")
+
+    return HttpResponseRedirect("/static/send/" + filename)
+
+
+
+def output_img(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("<script>alert('请先登录用户')</script>")
+
+    user_id = request.user.id
+    username = request.user.username
+
+    img_list = Img.objects.filter(user_id=user_id)
+
+    filename = username + "_" + time.strftime('%Y%m%d_%H%M') + ".zip"
+    zf = zipfile.ZipFile("static/img/" + filename, "w", zipfile.zlib.DEFLATED)
+    flag = False
+    for img in img_list:
+        if img.is_load:
+            continue
+        url = img.url
+        name = url.split("/")[-1]
+        zf.write("static/images/" + name, name)
+        img.is_load = "1"
+        img.save()
+        flag = True
+    zf.close()
+
+    if not flag:
+        return HttpResponse("<script>alert('暂时没有未导出的图片')</script>")
+
+    return HttpResponseRedirect("/static/img/" + filename)
+
+
+
+
+def login_page(request):
+    return render_to_response('login.html', locals())
+
+
+
+def login_user(request):
+    username = request.REQUEST.get('username', '')
+    password = request.REQUEST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        auth.login(request, user)
+        return HttpResponseRedirect("/")
+    else:
+        return HttpResponse("<script>alert('密码错误 请重试');top.location='/login_page/'</script>")
+
+
+def config(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+
+    user_id = request.user.id
+    username = request.user.username
+
+    rs = Config_send.objects.filter(user_id=user_id).order_by('id')
+
+    key_show = zip(key_list, show_list)
+
+    return render_to_response('config.html', locals())
+
+
+def update_config(request):
+
+    if not request.user.is_authenticated():
+        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+
+    user_id = request.user.id
+
+    key_list = request.REQUEST.get('key_list', '')
+    if key_list:
+        key_list = key_list.split(",")
+    else:
+        key_list = []
+
+    name_list = request.REQUEST.get('name_list', '')
+    if name_list:
+        name_list = name_list.split(",")
+    else:
+        name_list = []
+
+    default_list = request.REQUEST.get('default_list', '')
+    if default_list:
+        default_list = default_list.split(",")
+    else:
+        default_list = []
+
+    if key_list:
+        Config_send.objects.filter(user_id=user_id).delete()
+
+    for key, name, default in zip(key_list, name_list, default_list):
+        cs = Config_send()
+        cs.user_id = user_id
+        cs.key = key
+        cs.name = name
+        cs.default = default
+        cs.save()
+
+    return HttpResponse("保存成功")
+
+
+
+def regist(request):
+    return render_to_response('regist.html', locals())
+
+
+
+def register(request):
+
+    username = request.REQUEST.get('username', '')
+    password = request.REQUEST.get('password', '')
+    password2 = request.REQUEST.get('password2', '')
+    city = request.REQUEST.get('city', '')
+    company = request.REQUEST.get('company', '')
+
+    if not city or not company:
+        return HttpResponse("<script>alert('请输入所在城市和公司');top.location='/regist/'</script>")
+
+    if password != password2:
+        return HttpResponse("<script>alert('两次输入密码不一致');top.location='/regist/'</script>")
+
+    if User.objects.filter(username = username):
+        return HttpResponse("<script>alert('该用户已存在,换个用户名吧');top.location='/regist/'</script>")
+
+    u = User()
+    u.username = username
+    u.set_password(password)
+    u.save()
+
+    ui = User_info()
+    ui.user_id = u.id
+    ui.city = city
+    ui.company = company
+    ui.save()
+
+    return HttpResponse("<script>alert('恭喜,注册成功!');top.location='/'</script>")
+
+
+def send(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+    user_id = request.user.id
+    cs_list = Config_send.objects.filter(user_id=user_id).exclude(key="YunDanBianHao").order_by('id')
+
+    return render_to_response('send.html', locals())
+
+
+def waybill(request, YunDanBianHao):
+
+    rs = Send.objects.filter(YunDanBianHao=YunDanBianHao)
+    if rs:
+        send = rs[0]
+    else:
+        send = None
+
+    rs = Img.objects.filter(send_id=YunDanBianHao)
+    if rs:
+        img_url = rs[0].url
+    else:
+        img_url = None
+
+    return render_to_response('waybill.html', locals())
+
+

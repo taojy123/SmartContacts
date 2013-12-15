@@ -1,0 +1,140 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>阿里快递单 信息查询系统</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        /* <![CDATA[*/
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#config").addClass("pure-menu-selected")
+
+            $("#save").click(function(){
+                var configs = $("[name='config']")
+                var key_list = []
+                var name_list = []
+                var default_list = []
+                for(var i=0;i<configs.length;i++){
+                    var key = $(configs[i]).find("[name='key']").val()
+                    var name = $(configs[i]).find("[name='name']").val()
+                    var def = $(configs[i]).find("[name='def']").val()
+                    key_list[i] = key
+                    name_list[i] = name
+                    default_list[i] = def
+                }
+                key_list = key_list.toString()
+                name_list = name_list.toString()
+                default_list = default_list.toString()
+
+                $.ajax({
+                    url:"/update_config/",
+                    type:"post",
+                    data:{
+                        key_list:key_list,
+                        name_list:name_list,
+                        default_list:default_list
+                    },
+                    success:function(msg){alert(msg)},
+                    error:function(){alert("保存失败 请重试")}
+                })
+            })
+
+
+            $(".delete").click(function(){
+                if(confirm('确认要删除此条目')){
+                    $(this).parent().parent().remove()
+                }
+            })
+
+
+            $(".add").click(function(){
+                var tr = $(this).parent().parent()
+                tr.after(tr.clone())
+            })
+
+
+
+
+        })
+        /*]]>*/
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    {% include "menu.html" %}
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>参数设定</h1>
+            <h2>设置条目以及名称 用于导出运单数据表格</h2>
+        </div>
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <table id="myTable" class="tablesorter" style="border-collapse: separate; border-spacing:1px;">
+
+                <thead>
+                <tr>
+                    <th>数据字段</th>
+                    <th>显示名称</th>
+                    <th>默认数据</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for r in rs %}
+                    <tr name="config">
+                        <td>
+                            <select name="key">
+                                <option value="{{ r.key }}" selected="selected">{{ r.show_key }}</option>
+                                {% for ks in key_show %}
+                                    <option value="{{ ks.0 }}">{{ ks.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="name" value="{{ r.name }}" />
+                        </td>
+                        <td>
+                            <input type="text" name="def" value="{{ r.default }}" />
+                        </td>
+                        <td>
+                            <button class="add">新增</button>
+                            <button class="delete" >删除</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+            <button id="save" class="pure-button">保存</button>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>

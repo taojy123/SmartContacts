@@ -12,9 +12,12 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+
     ('^$', index),
     ('^/$', index),
     ('^index/$', index),
+
+    ('^readme/$', readme),
     ('^add_contacts/$', add_contacts),
     ('^get_contacts/(.*)/$', get_contacts),
     ('^add_send/$', add_send),
@@ -30,6 +33,19 @@ urlpatterns = patterns('',
     ('^reg/$', reg),
     ('^login/$', login),
     ('^logout/$', logout),
+
+
+    ('^output/$', output),
+    ('^output_img/$', output_img),
+    ('^login_user/$', login_user),
+    ('^login_page/$', login_page),
+    ('^config/$', config),
+    ('^update_config/$', update_config),
+    ('^regist/$', regist),
+    ('^register/$', register),
+    ('^send/$', send),
+    ('^waybill/(.*)/$', waybill),
+
 )
 # This will work if DEBUG is True
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

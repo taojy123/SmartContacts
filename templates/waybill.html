@@ -1,0 +1,108 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>阿里快递单</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+
+    <div id="right">
+
+        <div id="send_info" style="text-align: left;margin-left: 50px" >
+            <p>
+                <b style="font-size: 30px">运单查询结果</b>
+            </p>
+            <p>
+                <b>运单编号:</b>
+                {{ send.YunDanBianHao }}
+            </p>
+            <p>
+                <b>寄件日期:</b>
+                {{ send.JiJianRiQi }}
+            </p>
+            <p>
+                <b>寄件网点:</b>
+                {{ send.JiJianWangDian }}
+            </p>
+            <p>
+                <b>目的地:</b>
+                {{ send.MuDiDi }}
+            </p>
+            <p>
+                <b>件数:</b>
+                {{ send.JianShu }}
+            </p>
+            <p>
+                <b>实重:</b>
+                {{ send.ShiZhong }}
+            </p>
+            <p>
+                <b>付款方式:</b>
+                {{ send.FuKuanFangShi }}
+            </p>
+            <p>
+                <b>运费:</b>
+                {{ send.YunFei }}
+            </p>
+            <p>
+                <b>代收货款:</b>
+                {{ send.DaiShouHuoKuan }}
+            </p>
+            <p>
+                <b>取件员:</b>
+                {{ send.QuJianYuan }}
+            </p>
+            <p>
+                <b>子单号:</b>
+                {{ send.ZiDanHao }}
+            </p>
+            <p>
+                <b>寄件人:</b>
+                {{ send.JiJianRen }}
+            </p>
+            <p>
+                <b>寄件公司:</b>
+                {{ send.JiJianGongSi }}
+            </p>
+            <p>
+                <b>收件电话:</b>
+                {{ send.ShouJianDianHua }}
+            </p>
+            <p>
+                <b>收件人:</b>
+                {{ send.ShouJianRen }}
+            </p>
+            <p>
+                <b>收件公司:</b>
+                {{ send.ShouJianGongsi }}
+            </p>
+            <p>
+                <b>收件地址:</b>
+                {{ send.ShouJianDiZhi }}
+            </p>
+
+            {% if img_url %}
+                <img src="{{ img_url }}" width="600"/>
+            {% endif %}
+
+        </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>

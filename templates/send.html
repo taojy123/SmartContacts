@@ -1,0 +1,148 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>阿里快递单 信息查询系统</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+            $("#send").addClass("pure-menu-selected")
+        })
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+
+    {% include "menu.html" %}
+
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>运单录入</h1>
+        </div>
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <form id="pic_form" class="pure-form" action="/upload_img/{{ user_id }}/" method="post"  target="frame2" enctype="multipart/form-data">
+                <p>
+                    图片：
+                    <input type="file" name="u_file">
+                    <input type="hidden" name="send_id" id="send_id">
+                </p>
+            </form>
+
+            <form class="pure-form" action="/add_send/" method="post" target="frame1" onsubmit="$('#send_id').val($('#YunDanBianHao').val());$('#pic_form').submit()">
+                <input type="hidden" name="user_id" value="{{ user_id }}">
+                <p>
+                    运单编号：
+                    <input type="text" name="YunDanBianHao" id="YunDanBianHao">
+                </p>
+
+                {% for cs in cs_list %}
+                <p>
+                    <span>{{ cs.name }}：</span>
+                    <input type="text" name="{{ cs.key }}" value="{{ cs.default }}">
+                </p>
+                {% endfor %}
+
+                <!--
+                <p>
+                    寄件日期：
+                    <input type="text" name="JiJianRiQi">
+                </p>
+                <p>
+                    寄件网点：
+                    <input type="text" name="JiJianWangDian">
+                </p>
+                <p>
+                    目的地：
+                    <input type="text" name="MuDiDi">
+                </p>
+                <p>
+                    件数：
+                    <input type="text" name="JianShu">
+                </p>
+                <p>
+                    实重：
+                    <input type="text" name="ShiZhong">
+                </p>
+                <p>
+                    付款方式：
+                    <input type="text" name="FuKuanFangShi">
+                </p>
+                <p>
+                    运费：
+                    <input type="text" name="YunFei">
+                </p>
+                <p>
+                    代收货款：
+                    <input type="text" name="DaiShouHuoKuan">
+                </p>
+                <p>
+                    取件员：
+                    <input type="text" name="QuJianYuan">
+                </p>
+                <p>
+                    子单号：
+                    <input type="text" name="ZiDanHao">
+                </p>
+                <p>
+                    寄件人：
+                    <input type="text" name="JiJianRen">
+                </p>
+                <p>
+                    寄件公司：
+                    <input type="text" name="JiJianGongSi">
+                </p>
+                <p>
+                    收件电话：
+                    <input type="text" name="ShouJianDianHua">
+                </p>
+                <p>
+                    收件人：
+                    <input type="text" name="ShouJianRen">
+                </p>
+                <p>
+                    收件公司：
+                    <input type="text" name="ShouJianGongsi">
+                </p>
+                <p>
+                    收件地址：
+                    <input type="text" name="ShouJianDiZhi">
+                </p>
+                -->
+
+                <p>
+                    <input type="submit" class="pure-button pure-button-primary">
+                </p>
+            </form>
+
+
+            <iframe style="width: 100px;height: 40px" id="frame1" name="frame1" onload="$('#YunDanBianHao').val('')"></iframe>
+            <iframe style="width: 600px;height: 40px" id="frame2" name="frame2"></iframe>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>

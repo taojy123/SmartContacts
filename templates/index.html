@@ -1,23 +1,140 @@
-Smart Contacts
-<br/>
-/add_contacts/?user_id=xx&XXX=xx
-<br/>
-/add_send/?user_id=xx&XXX=xx
-<br/>
-/get_user_info/xx/
-<br/>
-/get_contacts/xx/
-<br/>
-/get_send/xx/
-<br/>
-/search_send/?YunDanBianHao=xx
-<br/>
-/upload_img/UID/?type=xx&send_id=xx&u_file=...
-<br/>
-/show_img/UID/
-<br/>
-/list_img/UID/
-<br/>
-/del_img/UID/
-<br/>
-/find_img/?YunDanBianHao=xxx
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>阿里快递单 信息查询系统</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#index").addClass("pure-menu-selected")
+        })
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+
+    {% include "menu.html" %}
+
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>运单查询</h1>
+            <h2><a href="http://www.alikdd.com/" target="_blank" style="color: #b1a29e">阿里快递单</a>旗下</h2>
+        </div>
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <form class="pure-form" action="/">
+                输入运单号:
+                <input type="text" name="YunDanBianHao">
+                <button id="manual_scan" class="pure-button pure-button-primary">查询</button>
+            </form>
+
+
+            {% if send %}
+                <div id="send_info" style="text-align: left;margin-left: 200px" >
+                    <p>
+                        <b>运单编号:</b>
+                        {{ send.YunDanBianHao }}
+                    </p>
+                    <p>
+                        <b>寄件日期:</b>
+                        {{ send.JiJianRiQi }}
+                    </p>
+                    <p>
+                        <b>寄件网点:</b>
+                        {{ send.JiJianWangDian }}
+                    </p>
+                    <p>
+                        <b>目的地:</b>
+                        {{ send.MuDiDi }}
+                    </p>
+                    <p>
+                        <b>件数:</b>
+                        {{ send.JianShu }}
+                    </p>
+                    <p>
+                        <b>实重:</b>
+                        {{ send.ShiZhong }}
+                    </p>
+                    <p>
+                        <b>付款方式:</b>
+                        {{ send.FuKuanFangShi }}
+                    </p>
+                    <p>
+                        <b>运费:</b>
+                        {{ send.YunFei }}
+                    </p>
+                    <p>
+                        <b>代收货款:</b>
+                        {{ send.DaiShouHuoKuan }}
+                    </p>
+                    <p>
+                        <b>取件员:</b>
+                        {{ send.QuJianYuan }}
+                    </p>
+                    <p>
+                        <b>子单号:</b>
+                        {{ send.ZiDanHao }}
+                    </p>
+                    <p>
+                        <b>寄件人:</b>
+                        {{ send.JiJianRen }}
+                    </p>
+                    <p>
+                        <b>寄件公司:</b>
+                        {{ send.JiJianGongSi }}
+                    </p>
+                    <p>
+                        <b>收件电话:</b>
+                        {{ send.ShouJianDianHua }}
+                    </p>
+                    <p>
+                        <b>收件人:</b>
+                        {{ send.ShouJianRen }}
+                    </p>
+                    <p>
+                        <b>收件公司:</b>
+                        {{ send.ShouJianGongsi }}
+                    </p>
+                    <p>
+                        <b>收件地址:</b>
+                        {{ send.ShouJianDiZhi }}
+                    </p>
+
+                    {% if img_url %}
+                        <img src="{{ img_url }}" width="600" />
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>
