@@ -201,6 +201,8 @@ def upload_img(request, user_id):
     permanent_file_name =  file.name
     if send_id:
         permanent_file_name = send_id + ext
+    else:
+        send_id = filename
     raw_file = os.path.join(os.getcwd(), 'static', 'images', permanent_file_name)
     destination = open(raw_file, 'wb+')
     for chunk in file.chunks():
