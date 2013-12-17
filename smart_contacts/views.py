@@ -195,14 +195,13 @@ def upload_img(request, user_id):
     if not file:
         return HttpResponse("no pic")
     filename, ext = os.path.splitext(file.name)
-    if not ext.lower() in ['.jpg','.gif','.png','.bmp']:
-        HttpResponse("type error")
 
     permanent_file_name =  file.name
     if send_id:
         permanent_file_name = send_id + ext
     else:
         send_id = filename
+
     raw_file = os.path.join(os.getcwd(), 'static', 'images', permanent_file_name)
     destination = open(raw_file, 'wb+')
     for chunk in file.chunks():
@@ -224,6 +223,8 @@ def upload_img(request, user_id):
     return HttpResponse(url)
 
 
+
+
 def show_img(request, user_id):
     ims = Img.objects.filter(user_id=user_id)
     return render_to_response('show_img.html', locals())
@@ -232,6 +233,7 @@ def show_img(request, user_id):
 def list_img(request, user_id):
     ims = Img.objects.filter(user_id=user_id)
     ls = [im.url for im in ims]
+    ls = json.dumps(ls, ensure_ascii=False)
     return HttpResponse(str(ls))
 
 
