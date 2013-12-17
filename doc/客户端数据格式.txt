@@ -36,6 +36,11 @@
 	public String ZiDanHao;//子单号
 	public String JiJianRen;//寄件人
 	public String JiJianGongSi;//寄件公司
+	public String ShouJianDianHua;//收件电话
+	public String ShouJianRen;//收件人
+	public String ShouJianGongsi;//收件公司
+	public String ShouJianDiZhi;//收件地址
+
 
 签收表单数据格式
 	//无，不需要签收表单
