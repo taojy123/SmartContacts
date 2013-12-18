@@ -189,8 +189,8 @@ def get_user_info(request, user_id):
 
 
 def upload_img(request, user_id):
-    type = request.REQUEST.get("type", "send")
-    send_id = request.REQUEST.get("send_id")
+    type = request.REQUEST.get("type", "images")
+    send_id = request.REQUEST.get("send_id", "")
     file = request.FILES.get('u_file')
     if not file:
         return HttpResponse("no pic")
@@ -202,24 +202,24 @@ def upload_img(request, user_id):
     else:
         send_id = filename
 
-    raw_file = os.path.join(os.getcwd(), 'static', 'images', permanent_file_name)
+    if not os.path.exists(os.path.join(os.getcwd(), 'static', type)):
+        os.makedirs(os.path.join(os.getcwd(), 'static', type))
+
+    raw_file = os.path.join(os.getcwd(), 'static', type, permanent_file_name)
     destination = open(raw_file, 'wb+')
     for chunk in file.chunks():
         destination.write(chunk)
     destination.close()
-    url = "http://" + request.get_host() + "/static/images/" + permanent_file_name
+    url = "http://" + request.get_host() + "/static/"+ type +"/" + permanent_file_name
 
-    im_exist = Img.objects.filter(name=filename)
-    if im_exist:
-        im = im_exist[0]
-    else:
-        im = Img()
+    im = Img()
     im.user_id = user_id
     im.name = filename
-    im.url = url
     im.type = type
     im.send_id = send_id
+    im.url = url
     im.save()
+
     return HttpResponse(url)
 
 
@@ -340,11 +340,7 @@ def index(request):
         else:
             send = None
 
-        rs = Img.objects.filter(send_id=YunDanBianHao)
-        if rs:
-            img_url = rs[0].url
-        else:
-            img_url = None
+        img_list = Img.objects.filter(send_id=YunDanBianHao)
 
     if request.user.is_authenticated():
         user_id = request.user.id

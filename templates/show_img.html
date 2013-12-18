@@ -11,7 +11,7 @@
             </a>
             <span>{{ im.name }}</span>
             <button onclick="window.open('{{ im.url }}')">下载</button>
-            <button onclick="if(confirm('确定要删除该图?')){top.location='/del_img/{{ im.id }}'}">删除</button>
+            <button onclick="if(confirm('确定要删除该文件?')){top.location='/del_img/{{ im.id }}'}">删除</button>
         </p>
     {% endfor %}
 </body>

@@ -116,15 +116,19 @@
                         {{ send.ShouJianDiZhi }}
                     </p>
 
-                    {% if img_url %}
-                        <img src="{{ img_url }}" width="600" />
-                    {% endif %}
 
                 </div>
 
             {% endif %}
 
 
+            {% for img in img_list %}
+                <br/>
+                <img src="{{ img.url }}" height="300" />
+                <span>{{ img.name }}</span>
+                <span>{{ img.type }}</span>
+                <br/>
+            {% endfor %}
 
         </div>
 

@@ -41,11 +41,18 @@
                     图片：
                     <input type="file" name="u_file">
                     <input type="hidden" name="send_id" id="send_id">
+                    <select name="type">
+                        <option value="fahuo">发货</option>
+                        <option value="shouhuo">收货</option>
+                        <option value="wentijian">问题件</option>
+                    </select>
+                    <input type="submit" value="单独上传图片" class="pure-button">
                 </p>
             </form>
 
             <form class="pure-form" action="/add_send/" method="post" target="frame1" onsubmit="$('#send_id').val($('#YunDanBianHao').val());$('#pic_form').submit()">
                 <input type="hidden" name="user_id" value="{{ user_id }}">
+                <br/>
                 <p>
                     运单编号：
                     <input type="text" name="YunDanBianHao" id="YunDanBianHao">
