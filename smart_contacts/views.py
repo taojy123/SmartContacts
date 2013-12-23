@@ -419,7 +419,8 @@ def output_img(request):
         url = img.url
         name = url.split("/")[-1]
         type = url.split("/")[-2]
-        zf.write("static/" + type + "/" + name, name)
+        if os.path.exists("static/" + type + "/" + name):
+            zf.write("static/" + type + "/" + name, name)
         img.is_load = "1"
         img.save()
         flag = True
