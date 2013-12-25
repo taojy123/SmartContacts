@@ -180,8 +180,8 @@ def get_user_info(request, user_id):
     ss = Send.objects.filter(user_id=user_id)
     cids = [str(c.id) for c in cs]
     sids = [str(s.id) for s in ss]
-    cids = ",".join(cids)
-    sids = ",".join(sids)
+    #cids = ",".join(cids)
+    #sids = ",".join(sids)
     d = dict(cids=cids, sids=sids)
     output = json.dumps(d, ensure_ascii=False)
     return HttpResponse(output)
