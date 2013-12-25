@@ -59,6 +59,15 @@ class Img(models.Model):
     send_id = models.CharField(max_length=255, blank=True , null=True)
     is_load = models.CharField(max_length=255, blank=True , null=True)
 
+    def type_name(self):
+        if self.type == "fahuo":
+            return "发货图片"
+        if self.type == "shouhuo":
+            return "收货图片"
+        if self.type == "wentijian":
+            return "问题件图片"
+        return self.type
+
 
 
 class Config_send(models.Model):
