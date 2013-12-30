@@ -1,4 +1,4 @@
-/.idea/
+
 
 #################
 ## Eclipse
@@ -215,3 +215,11 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+
+
+
+/.idea/
+/static/fahuo/
+/static/shouhuo/
+/static/wentijian/
