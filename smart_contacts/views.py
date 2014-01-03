@@ -514,11 +514,27 @@ def register(request):
     username = request.REQUEST.get('username', '')
     password = request.REQUEST.get('password', '')
     password2 = request.REQUEST.get('password2', '')
-    city = request.REQUEST.get('city', '')
-    company = request.REQUEST.get('company', '')
 
-    if not city or not company:
-        return HttpResponse("<script>alert('请输入所在城市和公司');top.location='/regist/'</script>")
+    KuaiDiGongSi = request.REQUEST.get('KuaiDiGongSi', '')
+    ZhanDianMingCheng = request.REQUEST.get('ZhanDianMingCheng', '')
+    ZhanDianDaiMa = request.REQUEST.get('ZhanDianDaiMa', '')
+    ShengFen = request.REQUEST.get('ShengFen', '')
+    DiShi = request.REQUEST.get('DiShi', '')
+    XianQu = request.REQUEST.get('XianQu', '')
+    XiangZhen = request.REQUEST.get('XiangZhen', '')
+    JieDao = request.REQUEST.get('JieDao', '')
+    XingMing = request.REQUEST.get('XingMing', '')
+    ZhiWu = request.REQUEST.get('ZhiWu', '')
+    DianHua = request.REQUEST.get('DianHua', '')
+    ShouJi = request.REQUEST.get('ShouJi', '')
+    QQHaoMa = request.REQUEST.get('QQHaoMa', '')
+    JingYingDiZhi = request.REQUEST.get('JingYingDiZhi', '')
+    FuWuFanWei = request.REQUEST.get('FuWuFanWei', '')
+    ChaoQuFanWei = request.REQUEST.get('ChaoQuFanWei', '')
+    BeiZhu = request.REQUEST.get('BeiZhu', '')
+
+    if not(KuaiDiGongSi and XingMing and DianHua):
+        return HttpResponse("<script>alert('请输入带*的必要信息');top.location='/regist/'</script>")
 
     if password != password2:
         return HttpResponse("<script>alert('两次输入密码不一致');top.location='/regist/'</script>")
@@ -526,16 +542,32 @@ def register(request):
     if User.objects.filter(username = username):
         return HttpResponse("<script>alert('该用户已存在,换个用户名吧');top.location='/regist/'</script>")
 
+
     u = User()
     u.username = username
     u.set_password(password)
     u.save()
 
-    ui = User_info()
-    ui.user_id = u.id
-    ui.city = city
-    ui.company = company
-    ui.save()
+    c = Contacts()
+    c.user_id = 0
+    c.KuaiDiGongSi = KuaiDiGongSi
+    c.ZhanDianMingCheng = ZhanDianMingCheng
+    c.ZhanDianDaiMa = ZhanDianDaiMa
+    c.ShengFen = ShengFen
+    c.DiShi = DiShi
+    c.XianQu = XianQu
+    c.XiangZhen = XiangZhen
+    c.JieDao = JieDao
+    c.XingMing = XingMing
+    c.ZhiWu = ZhiWu
+    c.DianHua = DianHua
+    c.ShouJi = ShouJi
+    c.QQHaoMa = QQHaoMa
+    c.JingYingDiZhi = JingYingDiZhi
+    c.FuWuFanWei = FuWuFanWei
+    c.ChaoQuFanWei = ChaoQuFanWei
+    c.BeiZhu = BeiZhu
+    c.save()
 
     return HttpResponse("<script>alert('恭喜,注册成功!');top.location='/'</script>")
 
