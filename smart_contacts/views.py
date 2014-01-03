@@ -178,6 +178,13 @@ def get_send(request, id):
 def get_user_info(request, user_id):
     cs = Contacts.objects.filter(user_id=user_id)
     ss = Send.objects.filter(user_id=user_id)
+
+    if user_id == "0":
+        cs += Contacts.objects.filter(user_id="")
+        ss += Send.objects.filter(user_id="")
+        cs += Contacts.objects.filter(user_id=None)
+        ss += Send.objects.filter(user_id=None)
+        
     cids = [str(c.id) for c in cs]
     sids = [str(s.id) for s in ss]
     #cids = ",".join(cids)
