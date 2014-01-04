@@ -605,3 +605,7 @@ def waybill(request, YunDanBianHao):
     return render_to_response('waybill.html', locals())
 
 
+
+def get_ip(request):
+    ip = request.META.get('REMOTE_ADDR','1.1.1.1')
+    return HttpResponse(ip)
