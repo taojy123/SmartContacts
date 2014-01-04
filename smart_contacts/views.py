@@ -60,7 +60,7 @@ def add_contacts(request):
     if id:
         ob.id = id
     ob.save()
-    return HttpResponse("ok")
+    return HttpResponse(str(ob.id))
 
 
 def get_contacts(request, id):
