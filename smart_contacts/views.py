@@ -644,3 +644,4 @@ def set_session(request):
 
 def get_session(request):
     print request.session.get("abc")
+    return HttpResponse(request.session.get("abc"))
