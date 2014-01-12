@@ -452,7 +452,9 @@ def login_user(request):
     password = request.REQUEST.get('password', '')
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
+        return HttpResponse(request.user)
         auth.login(request, user)
+        return HttpResponse(request.user)
         return HttpResponseRedirect("/")
     else:
         return HttpResponse("<script>alert('密码错误 请重试');top.location='/login_page/'</script>")
