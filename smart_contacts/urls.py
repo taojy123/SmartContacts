@@ -45,7 +45,10 @@ urlpatterns = patterns('',
     ('^register/$', register),
     ('^send/$', send),
     ('^waybill/(.*)/$', waybill),
+
     ('^get_ip/$', get_ip),
+    ('^set_session/$', set_session),
+    ('^get_session/$', get_session),
 
 )
 # This will work if DEBUG is True

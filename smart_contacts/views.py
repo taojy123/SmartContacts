@@ -636,3 +636,11 @@ def waybill(request, YunDanBianHao):
 def get_ip(request):
     ip = request.META.get('REMOTE_ADDR','1.1.1.1')
     return HttpResponse(ip)
+
+
+def set_session(request):
+    request.session["abc"] = "aaa"
+    return HttpResponse("ok")
+
+def get_session(request):
+    print request.session.get("abc")
