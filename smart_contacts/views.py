@@ -452,7 +452,6 @@ def login_user(request):
     password = request.REQUEST.get('password', '')
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
-        return HttpResponse(request.user)
         auth.login(request, user)
         return HttpResponse(request.user)
         return HttpResponseRedirect("/")
