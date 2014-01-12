@@ -608,6 +608,7 @@ def send(request):
     #user_id = request.user.id
     #username = request.user.username
 
+    cs_list = Config_send.objects.filter(user_id=user_id).exclude(key="YunDanBianHao").order_by('id')
     return render_to_response('send.html', locals())
 
 
