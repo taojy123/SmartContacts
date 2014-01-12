@@ -11,7 +11,10 @@ import xlwt
 import time
 import zipfile
 
-
+if not os.path.exists(os.path.join(os.getcwd(), 'static', "send")):
+    os.makedirs(os.path.join(os.getcwd(), 'static', "send"))
+if not os.path.exists(os.path.join(os.getcwd(), 'static', "img")):
+    os.makedirs(os.path.join(os.getcwd(), 'static', "img"))
 
 def readme(request):
     return render_to_response('readme.html', locals())
