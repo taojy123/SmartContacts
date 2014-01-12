@@ -349,6 +349,7 @@ def index(request):
 
         img_list = Img.objects.filter(send_id=YunDanBianHao)
 
+    return HttpResponse(request.user)
     if request.user.is_authenticated():
         user_id = request.user.id
         if not Config_send.objects.filter(user_id=user_id):
