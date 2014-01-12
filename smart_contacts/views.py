@@ -322,11 +322,11 @@ def login(request):
 
 
 def logout(request):
-    rp = HttpResponseRedirect("/")
     if request.user.is_authenticated():
         auth.logout(request)
-        rp.set_cookie("user_id", "")
-        rp.set_cookie("username", "")
+    rp = HttpResponseRedirect("/")
+    rp.set_cookie("user_id", "")
+    rp.set_cookie("username", "")
     return rp
 #======================================================================
 
