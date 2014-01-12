@@ -322,9 +322,12 @@ def login(request):
 
 
 def logout(request):
+    rp = HttpResponseRedirect("/")
     if request.user.is_authenticated():
         auth.logout(request)
-    return HttpResponseRedirect("/")
+        rp.set_cookie("user_id", "")
+        rp.set_cookie("username", "")
+    return rp
 #======================================================================
 
 
@@ -366,11 +369,14 @@ def index(request):
 
 
 def output(request):
-    if not request.user.is_authenticated():
-        return HttpResponse("<script>alert('请先登录用户')</script>")
+    #if not request.user.is_authenticated():
+    if not request.COOKIES.get("user_id"):
+        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+    user_id = request.COOKIES.get("user_id")
+    username = request.COOKIES.get("username")
 
-    user_id = request.user.id
-    username = request.user.username
+    #user_id = request.user.id
+    #username = request.user.username
 
     workBook = xlwt.Workbook()
     workBook.add_sheet("bill")
@@ -410,11 +416,14 @@ def output(request):
 
 
 def output_img(request):
-    if not request.user.is_authenticated():
-        return HttpResponse("<script>alert('请先登录用户')</script>")
+    #if not request.user.is_authenticated():
+    if not request.COOKIES.get("user_id"):
+        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+    user_id = request.COOKIES.get("user_id")
+    username = request.COOKIES.get("username")
 
-    user_id = request.user.id
-    username = request.user.username
+    #user_id = request.user.id
+    #username = request.user.username
 
     img_list = Img.objects.filter(user_id=user_id)
 
@@ -453,17 +462,23 @@ def login_user(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return HttpResponseRedirect("/")
+        rp = HttpResponseRedirect("/")
+        rp.set_cookie("user_id", user.id)
+        rp.set_cookie("username", user.username)
+        return rp
     else:
         return HttpResponse("<script>alert('密码错误 请重试');top.location='/login_page/'</script>")
 
 
 def config(request):
-    if not request.user.is_authenticated():
+    #if not request.user.is_authenticated():
+    if not request.COOKIES.get("user_id"):
         return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+    user_id = request.COOKIES.get("user_id")
+    username = request.COOKIES.get("username")
 
-    user_id = request.user.id
-    username = request.user.username
+    #user_id = request.user.id
+    #username = request.user.username
 
     rs = Config_send.objects.filter(user_id=user_id).order_by('id')
 
@@ -473,11 +488,14 @@ def config(request):
 
 
 def update_config(request):
-
-    if not request.user.is_authenticated():
+    #if not request.user.is_authenticated():
+    if not request.COOKIES.get("user_id"):
         return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+    user_id = request.COOKIES.get("user_id")
+    username = request.COOKIES.get("username")
 
-    user_id = request.user.id
+    #user_id = request.user.id
+    #username = request.user.username
 
     key_list = request.REQUEST.get('key_list', '')
     if key_list:
@@ -581,10 +599,14 @@ def register(request):
 
 
 def send(request):
-    if not request.user.is_authenticated():
+    #if not request.user.is_authenticated():
+    if not request.COOKIES.get("user_id"):
         return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
-    user_id = request.user.id
-    cs_list = Config_send.objects.filter(user_id=user_id).exclude(key="YunDanBianHao").order_by('id')
+    user_id = request.COOKIES.get("user_id")
+    username = request.COOKIES.get("username")
+
+    #user_id = request.user.id
+    #username = request.user.username
 
     return render_to_response('send.html', locals())
 

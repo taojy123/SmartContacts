@@ -31,10 +31,10 @@
                 <a href="/regist/" >注册用户</a>
             </li>
 
-            {% if request.user.is_authenticated %}
+            {% if request.COOKIES.user_id %}
             <li id="logout" >
                 <a href="/logout/" >
-                    <span>{{ request.user.username }}</span>
+                    <span>{{ request.COOKIES.username }}</span>
                     登出
                 </a>
             </li>
