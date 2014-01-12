@@ -349,7 +349,7 @@ def index(request):
 
         img_list = Img.objects.filter(send_id=YunDanBianHao)
 
-    return HttpResponse(request.user)
+    return HttpResponse(request.session.get("aaa","bbb"))
     if request.user.is_authenticated():
         user_id = request.user.id
         if not Config_send.objects.filter(user_id=user_id):
@@ -453,7 +453,7 @@ def login_user(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return HttpResponse(request.user)
+        request.session['abc'] = "aaa"
         return HttpResponseRedirect("/")
     else:
         return HttpResponse("<script>alert('密码错误 请重试');top.location='/login_page/'</script>")
