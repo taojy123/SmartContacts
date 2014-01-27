@@ -325,6 +325,18 @@ def login(request):
     else:
         return HttpResponse("Failure")
 
+    
+def login_adv(request):
+    username = request.REQUEST.get('username', '')
+    password = request.REQUEST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        auth.login(request, user)
+        return HttpResponse("%d,%d"%(user.id, user.usertype))
+    else:
+        return HttpResponse("Failure")
+
+
 
 def logout(request):
     if request.user.is_authenticated():
@@ -624,3 +636,6 @@ def set_session(request):
 def get_session(request):
     print request.session.get("abc")
     return HttpResponse(request.session.get("abc"))
+
+
+
