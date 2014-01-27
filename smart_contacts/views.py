@@ -302,6 +302,7 @@ def search_send(request):
 def reg(request):
     username = request.REQUEST.get('username', '')
     password = request.REQUEST.get('password', '')
+    usertype = request.REQUEST.get('usertype', 0)
     print "====reg===="
     print username
     print password
@@ -310,6 +311,7 @@ def reg(request):
     u = User()
     u.username = username
     u.set_password(password)
+    u.usertype = usertype
     u.save()
     return HttpResponse(u.id)
 
