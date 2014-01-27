@@ -522,6 +522,7 @@ def register(request):
     username = request.REQUEST.get('username', '')
     password = request.REQUEST.get('password', '')
     password2 = request.REQUEST.get('password2', '')
+    usertype = request.REQUEST.get('usertype', 0)
 
     KuaiDiGongSi = request.REQUEST.get('KuaiDiGongSi', '')
     ZhanDianMingCheng = request.REQUEST.get('ZhanDianMingCheng', '')
@@ -554,6 +555,7 @@ def register(request):
     u = User()
     u.username = username
     u.set_password(password)
+    u.usertype = usertype
     u.save()
 
     c = Contacts()
