@@ -220,7 +220,8 @@ def upload_img(request, user_id):
     for chunk in file.chunks():
         destination.write(chunk)
     destination.close()
-    url = "http://" + request.get_host() + "/static/"+ type +"/" + permanent_file_name
+    #url = "http://" + request.get_host() + "/static/"+ type +"/" + permanent_file_name
+    url = "/static/"+ type +"/" + permanent_file_name
 
     im = Img()
     im.user_id = user_id
@@ -369,10 +370,15 @@ def index(request):
 
 
 def output(request):
-    if not request.user.is_authenticated():
-        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
-    user_id = request.user.id
-    username = request.user.username
+    user_id = request.REQUEST.get("user_id")
+    if not user_id:
+        if not request.user.is_authenticated():
+            return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+        user_id = request.user.id
+        username = request.user.username
+    else:
+        user = User.objects.get(id=user_id)
+        username = user.username
 
     workBook = xlwt.Workbook()
     workBook.add_sheet("bill")
@@ -412,10 +418,15 @@ def output(request):
 
 
 def output_img(request):
-    if not request.user.is_authenticated():
-        return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
-    user_id = request.user.id
-    username = request.user.username
+    user_id = request.REQUEST.get("user_id")
+    if not user_id:
+        if not request.user.is_authenticated():
+            return HttpResponse("<script>alert('请先登录用户');top.location='/login_page/'</script>")
+        user_id = request.user.id
+        username = request.user.username
+    else:
+        user = User.objects.get(id=user_id)
+        username = user.username
 
 
     img_list = Img.objects.filter(user_id=user_id)
