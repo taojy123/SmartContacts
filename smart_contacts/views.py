@@ -459,6 +459,7 @@ def output_img(request):
         img.is_load = "1"
         img.save()
         flag = True
+
     zf.close()
 
     if not flag:
