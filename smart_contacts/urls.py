@@ -32,6 +32,7 @@ urlpatterns = patterns('',
                        
     ('^reg/$', reg),
     ('^login/$', login),
+    ('^login_adv/$', login_adv),
     ('^logout/$', logout),
 
 

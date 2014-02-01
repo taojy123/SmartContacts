@@ -303,6 +303,7 @@ def search_send(request):
 def reg(request):
     username = request.REQUEST.get('username', '')
     password = request.REQUEST.get('password', '')
+    usertype = request.REQUEST.get('usertype', 0)
     print "====reg===="
     print username
     print password
@@ -311,6 +312,7 @@ def reg(request):
     u = User()
     u.username = username
     u.set_password(password)
+    u.usertype = usertype
     u.save()
     return HttpResponse(u.id)
 
@@ -323,6 +325,18 @@ def login(request):
         return HttpResponse(user.id)
     else:
         return HttpResponse("Failure")
+
+    
+def login_adv(request):
+    username = request.REQUEST.get('username', '')
+    password = request.REQUEST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        auth.login(request, user)
+        return HttpResponse("%d,%d"%(user.id, user.usertype))
+    else:
+        return HttpResponse("Failure")
+
 
 
 def logout(request):
@@ -533,6 +547,7 @@ def register(request):
     username = request.REQUEST.get('username', '')
     password = request.REQUEST.get('password', '')
     password2 = request.REQUEST.get('password2', '')
+    usertype = request.REQUEST.get('usertype', 0)
 
     KuaiDiGongSi = request.REQUEST.get('KuaiDiGongSi', '')
     ZhanDianMingCheng = request.REQUEST.get('ZhanDianMingCheng', '')
@@ -565,6 +580,7 @@ def register(request):
     u = User()
     u.username = username
     u.set_password(password)
+    u.usertype = usertype
     u.save()
 
     c = Contacts()
@@ -631,3 +647,6 @@ def set_session(request):
 def get_session(request):
     print request.session.get("abc")
     return HttpResponse(request.session.get("abc"))
+
+
+
