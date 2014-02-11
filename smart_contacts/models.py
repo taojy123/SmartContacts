@@ -86,4 +86,7 @@ class User_info(models.Model):
     city = models.CharField(max_length=255, blank=True , null=True)
     company = models.CharField(max_length=255, blank=True , null=True)
 
+class Client_info(models.Model):
+    version = models.CharField(max_length=255, blank=True , null=True)
+    url = models.CharField(max_length=255, blank=True , null=True)
 

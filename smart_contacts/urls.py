@@ -47,9 +47,12 @@ urlpatterns = patterns('',
     ('^send/$', send),
     ('^waybill/(.*)/$', waybill),
 
+    ('^client_admin/$', client_admin),
+    ('^client_upload/$', client_upload),
+    ('^client_version/$', client_version),
+    ('^client_download/$', client_download),
+
     ('^get_ip/$', get_ip),
-    ('^set_session/$', set_session),
-    ('^get_session/$', get_session),
 
 )
 # This will work if DEBUG is True

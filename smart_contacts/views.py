@@ -636,18 +636,57 @@ def waybill(request, YunDanBianHao):
 
 
 
+
+def client_admin(request):
+    return render_to_response('client.html', locals())
+
+def client_upload(request):
+    version = request.REQUEST.get('version')
+    file = request.FILES.get('u_file')
+    if not file:
+        return HttpResponse("未选择客户端文件")
+    permanent_file_name =  file.name
+
+    if not os.path.exists(os.path.join(os.getcwd(), 'static', 'client')):
+        os.makedirs(os.path.join(os.getcwd(), 'static', 'client'))
+
+    raw_file = os.path.join(os.getcwd(), 'static', 'client', permanent_file_name)
+    destination = open(raw_file, 'wb+')
+    for chunk in file.chunks():
+        destination.write(chunk)
+    destination.close()
+    url = "/static/client/" + permanent_file_name
+
+    Client_info.objects.all().delete()
+    c = Client_info()
+    c.version = version
+    c.url = url
+    c.save()
+
+    return HttpResponse("客户端更新成功")
+
+def client_version(request):
+    if Client_info.objects.all():
+        c = Client_info.objects.all()[0]
+        version = c.version
+        return HttpResponse(version)
+    return HttpResponse("")
+
+def client_download(request):
+    if Client_info.objects.all():
+        c = Client_info.objects.all()[0]
+        url = c.url
+        return HttpResponseRedirect(url)
+    return HttpResponse("")
+
+
+
+
 def get_ip(request):
     ip = request.META.get('REMOTE_ADDR','1.1.1.1')
     return HttpResponse(ip)
 
 
-def set_session(request):
-    request.session["abc"] = "aaa"
-    return HttpResponse("ok")
-
-def get_session(request):
-    print request.session.get("abc")
-    return HttpResponse(request.session.get("abc"))
 
 
 
