@@ -638,6 +638,7 @@ def waybill(request, YunDanBianHao):
 
 
 def client_admin(request):
+    c = Client_info.objects.all()
     return render_to_response('client.html', locals())
 
 def client_upload(request):

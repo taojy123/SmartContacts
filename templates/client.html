@@ -28,6 +28,10 @@
 
         <div id="content" style="text-align: center;margin-top: 30px">
 
+            <label>当前最新版本:{{ c.0.version }}</label>
+            <br/>
+            <label>文件地址:{{ c.0.url }}</label>
+
             <form class="pure-form" action="/client_upload/" method="post"  enctype="multipart/form-data">
                     <input type="text" name="version" placeholder="输入版本号">
                     <input type="file" name="u_file">
