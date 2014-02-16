@@ -10,6 +10,7 @@ import json
 import xlwt
 import time
 import zipfile
+import datetime
 
 if not os.path.exists(os.path.join(os.getcwd(), 'static', "send")):
     os.makedirs(os.path.join(os.getcwd(), 'static', "send"))
@@ -685,6 +686,10 @@ def client_download(request):
 
 def get_ip(request):
     ip = request.META.get('REMOTE_ADDR','1.1.1.1')
+    set_ip = request.REQUEST.get("set_ip")
+    if set_ip:
+        s = "%s, %s \n"%(datetime.datetime.now(), set_ip)
+        open("static/ip.txt", "a").write(s)
     return HttpResponse(ip)
 
 
