@@ -8,6 +8,12 @@ show_list = ["运单编号", "寄件日期", "寄件网点", "目的地", "件�
              "子单号", "寄件人", "寄件公司", "收件电话", "收件人", "收件公司", "收件地址"]
 
 
+
+# /django/contrib/auth/models.py
+# User add
+# usertype = models.IntegerField(default=0)
+
+
 class Contacts(models.Model):
     user_id = models.CharField(max_length=255, blank=True , null=True)
     KuaiDiGongSi = models.CharField(max_length=255, blank=True , null=True)
